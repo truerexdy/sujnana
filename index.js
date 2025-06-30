@@ -8,7 +8,7 @@ async function main() {
   for (const item of items) {
     const link = document.createElement('a');
     link.className = 'blog-card';
-    link.href = `/blogs/${slugify(item.title)}.html`;
+    link.href = `/sujnana/blogs/${slugify(item.title)}.html`;
     link.innerHTML = `<strong>${item.title}</strong><br><small>${formatDate(item.updated_time)}</small>`;
     grid.appendChild(link);
   }
