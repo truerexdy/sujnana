@@ -21,27 +21,28 @@ type Item struct {
 }
 
 func updateJSONFile(filePath string, newTitle string) error {
-	data, err := os.ReadFile(filePath)
-	if err != nil {
-		return fmt.Errorf("error reading file: %v", err)
-	}
-
 	var items []Item
-	if err := json.Unmarshal(data, &items); err != nil {
-		return fmt.Errorf("error unmarshalling JSON: %v", err)
+
+	data, err := os.ReadFile(filePath)
+	if err == nil && len(data) > 0 {
+		if err := json.Unmarshal(data, &items); err != nil {
+			items = []Item{}
+		}
 	}
 
 	newItem := Item{
 		Title:       newTitle,
-		UpdatedTime: time.Now().Format(time.RFC3339), // Format the current time
+		UpdatedTime: time.Now().Format(time.RFC3339),
 	}
-
 	items = append(items, newItem)
+
 	updatedData, err := json.MarshalIndent(items, "", "  ")
 	if err != nil {
 		return fmt.Errorf("error marshalling JSON: %v", err)
 	}
-	if err := os.WriteFile(filePath, updatedData, 0644); err != nil {
+
+	err = os.WriteFile(filePath, updatedData, 0644)
+	if err != nil {
 		return fmt.Errorf("error writing file: %v", err)
 	}
 	return nil
@@ -119,19 +120,15 @@ func main() {
 	htmlBody := mdToHTML(md)
 	html := injectHTML(htmlTemplate, htmlBody, []byte(name))
 
-	outDir := filepath.Join(htmlDir, name)
-	err = os.MkdirAll(outDir, 0755)
-	if err != nil {
-		fmt.Println("Could not create directory:", err)
-		return
-	}
-
-	outPath := filepath.Join(outDir, name+".html")
+	outPath := filepath.Join(htmlDir, name+".html")
 	f, err := os.Create(outPath)
 	if err != nil {
 		fmt.Println("Could not create file:", err)
 		return
 	}
+	jsonFilePath := os.Getenv("HOME_DIR")
+	jsonFilePath += "/blogs.json"
+	updateJSONFile(jsonFilePath, name)
 	defer f.Close()
 
 	_, err = f.Write(html)
@@ -139,6 +136,4 @@ func main() {
 		fmt.Println("Could not write to file:", err)
 		return
 	}
-	jsonFilePath := os.Getenv("HOME_DIR/blogs.json")
-	updateJSONFile(jsonFilePath, name)
 }

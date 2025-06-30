@@ -1,0 +1,156 @@
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #000000;
+  color: #ffffff;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.6;
+}
+
+#brand {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  padding: clamp(0.2rem, 0.75vw, 0.25rem);
+  text-align: center;
+  border-bottom: 1px;
+  flex-shrink: 0;
+  user-select: none;
+  font-weight: bold;
+}
+
+#brand a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+#reading-section {
+  flex-grow: 1;
+  padding: clamp(1rem, 4vw, 2rem);
+  scrollbar-width: none;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-y: scroll;
+}
+
+#reading-section h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+#reading-section h2 {
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+#reading-section h3 {
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: #ffffff;
+}
+
+#reading-section p {
+  font-size: clamp(1rem, 2.5vw, 1.125rem);
+  margin-bottom: 1.5rem;
+  text-align: justify;
+}
+
+#reading-section a {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+#reading-section a:hover {
+  color: #cccccc;
+}
+
+#reading-section blockquote {
+  border-left: 4px solid #333;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  background: #050505;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+#reading-section code {
+  background: #050505;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+}
+
+#reading-section pre {
+  background: #050505;
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+#reading-section pre code {
+  background: none;
+  padding: 0;
+}
+
+#reading-section ul, #reading-section ol {
+  margin-bottom: 1.5rem;
+  padding-left: 2rem;
+}
+
+#reading-section li {
+  margin-bottom: 0.5rem;
+}
+
+#reading-section img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 1rem 0;
+}
+
+#rex {
+  user-select: none;
+  text-align: center;
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  border-top: 1px;
+  border-bottom: 3px;
+  flex-shrink: 0;
+}
+
+#rex a {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+#rex a:hover {
+  color: #cccccc;
+}
+
+::selection {
+    background-color: #FF0505;
+}
+
+@media (max-width: 768px) {
+  #reading-section {
+    padding: clamp(0.75rem, 3vw, 1.5rem);
+  }
+  
+  #reading-section p {
+    text-align: left;
+  }
+}
+
+@media (max-width: 480px) {
+  #reading-section {
+    padding: 1rem;
+  }
+}

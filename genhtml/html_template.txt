@@ -4,10 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><!--title--></title>
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" href="../icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../blog.css">
 </head>
 <body>
-<!--body-->
+    <header id="brand"><a href="../index.html">Sujnana</a></header>
+    
+    <main id="reading-section">
+        <!--body-->
+    </main>
+    
+  <footer id="rex">© 2025 <a href="https://truerexdy.github.io/rexdyweb" target="_blank">Rexdy</a></footer>
+    
+    <script src="../blog.js"></script>
 </body>
 </html>
