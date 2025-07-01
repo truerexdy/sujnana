@@ -63,12 +63,14 @@ body {
 }
 
 #reading-section a {
-  color: #ffffff;
-  text-decoration: underline;
+  color: #aaaaaa;
+  text-decoration: none;
 }
 
 #reading-section a:hover {
-  color: #cccccc;
+  color: #ffffff;
+  text-shadow: 0 0 5px #ff0505;
+  font-style: bold;
 }
 
 #reading-section blockquote {
