@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function() {
     initializeTemplate();
 });
@@ -92,28 +91,3 @@ function addCodeCopyButtons() {
         pre.appendChild(copyButton);
     });
 }
-
-function updateBrand(text) {
-    const brandElement = document.getElementById('brand');
-    if (brandElement) {
-        brandElement.textContent = text;
-    }
-}
-
-function updateFooter(html) {
-    const footerElement = document.getElementById('rex');
-    if (footerElement) {
-        footerElement.innerHTML = html;
-    }
-}
-
-function setTheme(isDark = true) {
-    document.body.style.background = isDark ? '#000000' : '#ffffff';
-    document.body.style.color = isDark ? '#ffffff' : '#000000';
-}
-
-window.TemplateUtils = {
-    updateBrand,
-    updateFooter,
-    setTheme
-};
