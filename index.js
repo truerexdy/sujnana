@@ -8,14 +8,10 @@ async function main() {
   for (const item of items) {
     const link = document.createElement('a');
     link.className = 'blog-card';
-    link.href = `/sujnana/blogs/${slugify(item.title)}.html`;
+    link.href = `/sujnana/blogs/${item.id}.html`;
     link.innerHTML = `<strong>${item.title}</strong><br><small>${formatDate(item.updated_time)}</small>`;
     grid.appendChild(link);
   }
-}
-
-function slugify(text) {
-  return text.toLowerCase().replace(/[^\w]+/g, '-');
 }
 
 function formatDate(iso) {

@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"encoding/json"
 	"time"
+	"strconv"
 
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
@@ -16,11 +17,52 @@ import (
 )
 
 type Item struct {
+	ID          int    `json:"id"`
 	Title       string `json:"title"`
 	UpdatedTime string `json:"updated_time"`
 }
 
-func updateJSONFile(filePath string, newTitle string) error {
+func getNextID() (int, error) {
+	lastIDStr := os.Getenv("LAST_ID")
+	if lastIDStr == "" {
+		return 0, nil
+	}
+	lastID, err := strconv.Atoi(lastIDStr)
+	if err != nil {
+		return 0, err
+	}
+	return lastID + 1, nil
+}
+
+func updateEnvFile(nextID int) error {
+	envPath := "config.env"
+	content, err := os.ReadFile(envPath)
+	if err != nil {
+		return err
+	}
+
+	lines := bytes.Split(content, []byte("\n"))
+	var newLines [][]byte
+	found := false
+
+	for _, line := range lines {
+		if bytes.HasPrefix(line, []byte("LAST_ID=")) {
+			newLines = append(newLines, []byte(fmt.Sprintf("LAST_ID=%d", nextID)))
+			found = true
+		} else {
+			newLines = append(newLines, line)
+		}
+	}
+
+	if !found {
+		newLines = append(newLines, []byte(fmt.Sprintf("LAST_ID=%d", nextID)))
+	}
+
+	newContent := bytes.Join(newLines, []byte("\n"))
+	return os.WriteFile(envPath, newContent, 0644)
+}
+
+func updateJSONFile(filePath string, newItem Item) error {
 	var items []Item
 
 	data, err := os.ReadFile(filePath)
@@ -30,10 +72,6 @@ func updateJSONFile(filePath string, newTitle string) error {
 		}
 	}
 
-	newItem := Item{
-		Title:       newTitle,
-		UpdatedTime: time.Now().Format(time.RFC3339),
-	}
 	items = append(items, newItem)
 
 	updatedData, err := json.MarshalIndent(items, "", "  ")
@@ -85,23 +123,28 @@ func main() {
 
 	htmlDir := os.Getenv("HTML_DIR")
 	templatePath := os.Getenv("TEMPLATE_PATH")
-	if htmlDir == "" || templatePath == "" {
-		fmt.Println("Missing HTML_DIR or TEMPLATE_PATH in env")
+	sourceDir := os.Getenv("SOURCE_DIR")
+	if htmlDir == "" || templatePath == "" || sourceDir == "" {
+		fmt.Println("Missing HTML_DIR, TEMPLATE_PATH, or SOURCE_DIR in env")
 		return
 	}
 
-	fmt.Println("Enter path of .md file:")
+	fmt.Println("Enter markdown filename (without .md extension):")
 	scanner := bufio.NewScanner(os.Stdin)
 	if !scanner.Scan() {
 		fmt.Println("Couldn't read from stdin")
 		return
 	}
-	mdPath := scanner.Text()
-	if filepath.Ext(mdPath) != ".md" {
-		fmt.Println("File must have .md extension")
+	filename := scanner.Text()
+	
+	fmt.Println("Enter title for the blog:")
+	if !scanner.Scan() {
+		fmt.Println("Couldn't read from stdin")
 		return
 	}
+	title := scanner.Text()
 
+	mdPath := filepath.Join(sourceDir, filename+".md")
 	md, err := os.ReadFile(mdPath)
 	if err != nil {
 		fmt.Println("Could not read md file:", err)
@@ -114,21 +157,21 @@ func main() {
 		return
 	}
 
-	filename := filepath.Base(mdPath)
-	name := filename[:len(filename)-3]
+	nextID, err := getNextID()
+	if err != nil {
+		fmt.Println("Could not get next ID:", err)
+		return
+	}
 
 	htmlBody := mdToHTML(md)
-	html := injectHTML(htmlTemplate, htmlBody, []byte(name))
+	html := injectHTML(htmlTemplate, htmlBody, []byte(title))
 
-	outPath := filepath.Join(htmlDir, name+".html")
+	outPath := filepath.Join(htmlDir, fmt.Sprintf("%d.html", nextID))
 	f, err := os.Create(outPath)
 	if err != nil {
 		fmt.Println("Could not create file:", err)
 		return
 	}
-	jsonFilePath := os.Getenv("HOME_DIR")
-	jsonFilePath += "/blogs.json"
-	updateJSONFile(jsonFilePath, name)
 	defer f.Close()
 
 	_, err = f.Write(html)
@@ -136,4 +179,26 @@ func main() {
 		fmt.Println("Could not write to file:", err)
 		return
 	}
+
+	newItem := Item{
+		ID:          nextID,
+		Title:       title,
+		UpdatedTime: time.Now().Format(time.RFC3339),
+	}
+
+	jsonFilePath := os.Getenv("HOME_DIR")
+	jsonFilePath += "/blogs.json"
+	err = updateJSONFile(jsonFilePath, newItem)
+	if err != nil {
+		fmt.Println("Could not update JSON file:", err)
+		return
+	}
+
+	err = updateEnvFile(nextID)
+	if err != nil {
+		fmt.Println("Could not update env file:", err)
+		return
+	}
+
+	fmt.Printf("Blog created successfully with ID: %d\n", nextID)
 }
