@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restarting my Rust Journey</title>
+    <link rel="icon" href="../icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../blog.css">
+</head>
+<body>
+    <header id="brand"><a href="../">Sujnana</a></header>
+    
+    <main id="reading-section">
+        <p>I was introduced to rust in 2023, I just knew that a language called Rust exists but back then I didn&rsquo;t care much about it. Then, in 2024, my bro(I haven&rsquo;t asked his permission if I can mention his name in these blogs, so just bro for now) introduced me to it. We both tried learning it, we learnt the basics but then due to academic pressure, we stopped there. But now I am reconsidering it, just because I have some free time in my hands and to give it a shot.</p>
+
+<p>Rust is seen as a modern but a safer alternative to C/C++. In this case safe refers to memory safety, this is a topic which deserves an entire blog(if you still need a simple example, <a href="">click this</a>) so the following is what&rsquo;s relevant to this discussion:
+C/C++ gives full control over the memory. It gives the programmer the power to control each individual byte in memory. But as they say,</p>
+
+<blockquote>
+<p>With great power comes great responsibility.</p>
+</blockquote>
+
+<p>Programmers are humans, humans make mistakes and these humans don&rsquo;t handle the memory responsibly. Leading to bugs and vulnerabilities which can be exploited by people with bad intends.  Rust solves this problem by not letting programmers make mistakes. Memory safety is the biggest selling point of Rust.</p>
+
+<p>So, did nobody try to solve this problem before Rust? They did solve but not the way Rust solves it.
+Languages like Java, Python, Go etc. have a garbage collector(GC), which keeps track of the memory allocated and manages it ensuring memory safety. In Java and Python the GC is a part of the JVM(Java  Virtual Machine) and PVM(Python Virtual Machine) but in case of Go the GC is a part of it&rsquo;s Runtime. If all these terms seem complicated to you just understand that there is this thing called GC which while the program is being executed manages memory and ensures memory safety.</p>
+
+<p>Rust took a different approach, it ensures memory safety without using a GC. The Rust compiler check the code during compilation and if it finds a piece of code which might cause problems, it stops compiling and informs the programmer about this. Something that C/C++ doesn&rsquo;t do, the part of the Rust compiler which does this is called the Borrow checker. Just so you know Rust does have a minimal Runtime but it&rsquo;s very minimal and only does the initial setup, handles panics, custom entry points etc. but when compared  to runtimes of other languages, the overhead is very less so it can be neglected.
+Apart from this Rust also has concurrency unlike C, I mean we can use threads in C too but they are OS dependent pthreads so no native support.</p>
+
+<p>Apart from that since Rust is relatively new and C is ancient, the tooling around the language is also modern and ergonomic in Rust when compared to C. Building C projects is a bit tricky but Rust has cargo which both builds and also manages packages &amp; dependencies. This all leads to a good developer experience in Rust.</p>
+
+<p>C/C++ is used in low-level, performance critical, time critical systems programming applications and Rust is also targeted towards such applications. The speed of Rust is also very close and comparable to that of C. Hence there is this Rust v/s C debate in forums and communities online. But my take is a bit different,</p>
+
+<blockquote>
+<p>Learn both, use C when you want performance &amp; full/unrestricted low level control, use Rust when you need modern tooling, good developer experience and of course memory safety. But, since I know both, I can apply lessons I learnt in one language while using the other and make the best use of both worlds.</p>
+</blockquote>
+
+<p>Rust taught me a lot about memory safety and overall security of software which I didn&rsquo;t even notice while writing C. Rust does abstract some of the low level stuff, but since I&rsquo;ve learnt C, it taught me the low level stuff. This I think is the best approach, at least for me, if you have anything to argue about you can ping me over <a href="https://rexdy.bsky.social/" target="_blank">here</a>, <a href="https://www.instagram.com/rexdy.ka/" target="_blank">here</a> or <a href="mailto:hirexdy@proton.me" target="_blank">here</a>.
+I am still getting starting with Rust, whatever I said in this blog is a surface level understanding of it and I intentionally didn&rsquo;t discuss some things here because I believe I need a deeper understating of them before I write them here. So, I will continue to write my updates of my Rust journey here and if you have anything to say or want to just have a chat about anything written in any of my blogs, me DMs are open, <a href="https://rexdy.bsky.social/" target="_blank">here</a>, <a href="https://www.instagram.com/rexdy.ka/" target="_blank">here</a> or <a href="mailto:hirexdy@proton.me" target="_blank">here</a></p>
+
+<p>Bye :)</p>
+
+<p>Check out more blogs over <a href="https://truerexdy.github.io/sujnana/" target="_blank">here</a>.</p>
+
+<h3 id="simple-memory-safety-problem-in-c">Simple Memory Safety Problem in C</h3>
+
+<pre><code class="language-c">char* mystr = (char*)malloc(64*sizeof(char));
+scanf(&quot;%s&quot;, mystr);
+</code></pre>
+
+<p>Here the size of mystr is only 64B but what if the use enters a longer string during scanf? This might lead to the extra bytes to be written outside the mystr buffer, hence this bug is called  a Buffer overflow. This might lead to undefined behaviour and even remote code execution if a hacker exploits it.</p>
+
+    </main>
+    
+  <footer id="rex">© 2025 <a href="https://truerexdy.github.io/rexdyweb" target="_blank">Rexdy</a></footer>
+    
+    <script src="../blog.js"></script>
+</body>
+</html>
